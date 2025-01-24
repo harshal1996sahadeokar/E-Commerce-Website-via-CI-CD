@@ -1,6 +1,15 @@
 pipeline {
     agent any
-
+  stages {
+        stage('Change sudo') {
+            steps {
+                script {
+                     {
+                        sh "sudo su"
+                    }
+                }
+            }
+        }
     stages {
         stage('Build & Tag Docker Image') {
             steps {
