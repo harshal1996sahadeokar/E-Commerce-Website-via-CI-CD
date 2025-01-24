@@ -1,16 +1,16 @@
 pipeline {
     agent any
-  stages {
+
+    stages {
         stage('Change sudo') {
             steps {
                 script {
-                     {
-                        sh "sudo su"
-                    }
+                    // Running a command with sudo
+                    sh "sudo whoami"
                 }
             }
         }
-    stages {
+        
         stage('Build & Tag Docker Image') {
             steps {
                 script {
@@ -25,7 +25,7 @@ pipeline {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
-                        sh "docker push harshalsahadeokar/adservice:latest "
+                        sh "docker push harshalsahadeokar/adservice:latest"
                     }
                 }
             }
