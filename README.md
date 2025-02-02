@@ -103,4 +103,4 @@ This project showcases the implementation of a highly efficient CI/CD pipeline t
 This project is licensed under the MIT License.
 
 ## 👨‍💻 Author
-**Your Name** - [GitHub Profile](https://github.com/your-profile)
+**Harshal Sahadeokar** - [GitHub Profile](https://github.com/your-profile)
