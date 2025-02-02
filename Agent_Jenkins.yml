@@ -1,0 +1,60 @@
+pipeline {
+    agent {
+        kubernetes {
+            // Define the pod template
+            yaml """
+            apiVersion: v1
+            kind: Pod
+            metadata:
+              name: jenkins-agent
+            spec:
+              containers:
+              - name: kubectl
+                image: bitnami/kubectl:latest  # Use a kubectl-enabled image
+                command: ["sleep"]
+                args: ["infinity"]  # Keep the container running
+              serviceAccountName: jenkins  # Use the Jenkins service account
+            """
+        }
+    }
+
+    stages {
+        stage('Deploy To Kubernetes') {
+            steps {
+                container('kubectl') {  // Run steps inside the kubectl container
+                    withKubeCredentials(kubectlCredentials: [
+                        [
+                            caCertificate: '',
+                            clusterName: 'EKS-1',
+                            contextName: '',
+                            credentialsId: 'k8-token',
+                            namespace: 'webapps',
+                            serverUrl: 'https://2877F494CAFB8A84FA37D8D8896E58B7.gr7.ap-south-1.eks.amazonaws.com'
+                        ]
+                    ]) {
+                        sh "kubectl apply -f deployment-service.yml"
+                    }
+                }
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                container('kubectl') {  // Run steps inside the kubectl container
+                    withKubeCredentials(kubectlCredentials: [
+                        [
+                            caCertificate: '',
+                            clusterName: 'EKS-1',
+                            contextName: '',
+                            credentialsId: 'k8-token',
+                            namespace: 'webapps',
+                            serverUrl: 'https://2877F494CAFB8A84FA37D8D8896E58B7.gr7.ap-south-1.eks.amazonaws.com'
+                        ]
+                    ]) {
+                        sh "kubectl get svc -n webapps"
+                    }
+                }
+            }
+        }
+    }
+}
